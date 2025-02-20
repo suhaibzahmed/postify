@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id           String    @id @default(uuid())
+  clerkId      String    @unique
+  firstName    String
+  lastName     String
+  username     String    @unique
+  email        String    @unique
+  profileImage String?
+  posts        Post[]
+  likes        Like[]
+  comments     Comment[]
+  followers    Follow[]  @relation("Follower")
+  following    Follow[]  @relation("Following")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  profile   Profile?  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String?
+  title     String
+  postImage String?
+  likes     Like[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  profile   Profile? @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  profile   Profile? @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  follower    Profile  @relation("Follower", fields: [followerId], references: [clerkId], onDelete: Cascade)
+  followerId  String
+  following   Profile  @relation("Following", fields: [followingId], references: [clerkId], onDelete: Cascade)
+  followingId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([followerId, followingId])
+}
