@@ -1,6 +1,8 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
+import { iUser } from '@/types/generalTypes'
+import db from '@/utils/db'
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET
@@ -47,11 +49,85 @@ export async function POST(req: Request) {
     })
   }
 
-  // Do something with payload
-  // For this guide, log payload to console
   const { id } = evt.data
   const eventType = evt.type
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`)
+
+  if (eventType === 'user.created') {
+    const {
+      first_name,
+      last_name,
+      username,
+      email_addresses,
+      image_url,
+      primary_email_address_id,
+    } = evt.data
+
+    const email = email_addresses.find(
+      (email) => email.id === primary_email_address_id
+    )?.email_address as string
+
+    const rawData: iUser = {
+      clerkId: id as string,
+      firstName: first_name as string,
+      lastName: last_name as string,
+      username: username as string,
+      email,
+      profileImage: image_url || '',
+    }
+    console.log('🚀 ~ POST ~ rawData:', rawData)
+
+    try {
+      const profile = await db.profile.create({ data: rawData })
+      if (!profile) throw new Error('Failed to create user')
+    } catch (error) {
+      console.log('Error occurred while creating profile', error)
+    }
+  }
+
+  if (eventType === 'user.updated') {
+    const {
+      first_name,
+      last_name,
+      username,
+      email_addresses,
+      image_url,
+      primary_email_address_id,
+    } = evt.data
+
+    const email = email_addresses.find(
+      (email) => email.id === primary_email_address_id
+    )?.email_address as string
+
+    const rawData: iUser = {
+      clerkId: id as string,
+      firstName: first_name as string,
+      lastName: last_name as string,
+      username: username as string,
+      email,
+      profileImage: image_url,
+    }
+
+    try {
+      const updatedProfile = await db.profile.update({
+        where: {
+          clerkId: id,
+        },
+        data: rawData,
+      })
+      if (!updatedProfile) throw new Error('Failed to update user')
+    } catch (error) {
+      console.log('Error occurred while updating profile', error)
+    }
+  }
+
+  if (eventType === 'user.deleted') {
+    try {
+      await db.profile.delete({ where: { clerkId: id } })
+    } catch (error) {
+      console.log('Error occurred while deleting profile', error)
+    }
+  }
 
   return new Response('Webhook received', { status: 200 })
 }

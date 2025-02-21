@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
-import Sidebar from './_components/sidebar/Sidebar'
 
 export const metadata: Metadata = {
   title: 'Postify App',
@@ -16,10 +15,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className=" container bg-slate-100 ">
-          <Sidebar />
-          {children}
-        </body>
+        <body className=" bg-slate-100 ">{children}</body>
       </html>
     </ClerkProvider>
   )
