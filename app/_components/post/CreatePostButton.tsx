@@ -1,18 +1,24 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
+import { createPost } from '@/utils/actions'
 import { FiPlus } from 'react-icons/fi'
+import FormContainer from '../form/FormContainer'
+import FormInput from '../form/FormInput'
+import { useState } from 'react'
 
 function CreatePostButton() {
+  const [open, setOpen] = useState(false)
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button className="absolute bottom-5 right-5 z-20 shadow-md">
           <FiPlus />
@@ -21,9 +27,14 @@ function CreatePostButton() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Post</DialogTitle>
-          <div>
-            <Input />
-          </div>
+          <FormContainer
+            btnTitle="create post"
+            btnLoadingTitle="creating post"
+            action={createPost}
+            setOpen={setOpen}
+          >
+            <FormInput name="title" label="title" />
+          </FormContainer>
         </DialogHeader>
       </DialogContent>
     </Dialog>

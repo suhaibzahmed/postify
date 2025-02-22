@@ -1,6 +1,7 @@
 import CreatePostButton from '@/app/_components/post/CreatePostButton'
 
-function MyPostsPage() {
+async function MyPostsPage() {
+  // const posts = await getMyPosts()
   return (
     <div>
       <CreatePostButton />

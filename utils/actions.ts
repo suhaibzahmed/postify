@@ -3,6 +3,7 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import db from './db'
+import { postSchema, validateWithZodSchema } from './schemas'
 
 async function checkAuth() {
   const user = await currentUser()
@@ -46,3 +47,26 @@ export async function getAllPosts() {
     stdErrorMsg('getting all posts', error)
   }
 }
+
+export async function createPost(
+  prevState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const user = await checkAuth()
+
+    const rawData = {
+      title: formData.get('title') as string,
+    }
+
+    const validatedData = validateWithZodSchema(postSchema, rawData)
+
+    await db.post.create({ data: { profileId: user.id, ...validatedData } })
+
+    return { success: true, message: 'Post created' }
+  } catch (error) {
+    return { success: false, message: error.message }
+  }
+}
+
+export async function getMyPosts() {}

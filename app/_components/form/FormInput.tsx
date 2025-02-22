@@ -12,7 +12,7 @@ function FormInput(props: iFormInput) {
   return (
     <div>
       <Label htmlFor={name}>{label || name}</Label>
-      <Input name={name} id={name} />
+      <Input name={name} id={name} required />
     </div>
   )
 }

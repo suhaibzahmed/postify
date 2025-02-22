@@ -10,6 +10,9 @@ export interface iUser {
   profileImage?: string
 }
 
-// export interface iPost {
-
-// }
+export interface iAction {
+  (prevState: unknown, formData: FormData): Promise<{
+    success: boolean
+    message: string
+  }>
+}
