@@ -206,3 +206,47 @@ export async function getFollowedUsersPost() {
     stdErrorMsg('getting followed users posts', error)
   }
 }
+
+export async function getLikedPosts() {
+  try {
+    const user = await checkAuth()
+    const liked = await db.like.findMany({
+      where: { profileId: user.id as string },
+    })
+    const likedIds = liked
+      .map((like) => like.postId)
+      .filter((id) => id !== null)
+
+    const posts = await db.post.findMany({
+      where: {
+        id: { in: likedIds },
+      },
+      include: { profile: true },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return posts
+  } catch (error) {
+    stdErrorMsg('getting liked posts', error)
+  }
+}
+
+export async function getFollowingCount() {
+  try {
+    const user = await checkAuth()
+    const count = await db.follow.count({ where: { followerId: user.id } })
+    return count
+  } catch (error) {
+    stdErrorMsg('getting follower count', error)
+  }
+}
+
+export async function getFollowerCount() {
+  try {
+    const user = await checkAuth()
+    const count = await db.follow.count({ where: { followingId: user.id } })
+    return count
+  } catch (error) {
+    stdErrorMsg('getting follower count', error)
+  }
+}

@@ -57,7 +57,7 @@ model Comment {
   profile   Profile? @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
   profileId String?
   post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    String?
+  postId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
