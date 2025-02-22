@@ -42,6 +42,7 @@ export async function getAllPosts() {
   try {
     const posts = await db.post.findMany({
       include: { profile: true },
+      orderBy: { createdAt: 'desc' },
     })
     return posts
   } catch (error) {
@@ -81,6 +82,7 @@ export async function getMyPosts() {
       include: {
         profile: true,
       },
+      orderBy: { createdAt: 'desc' },
     })
 
     return posts
@@ -191,11 +193,13 @@ export async function getFollowedUsersPost() {
         followerId: user.id,
       },
     })
-    const userIds = followedUsers.map((user) => user.id)
+    const userIds = followedUsers.map((user) => user.followingId)
     const posts = await db.post.findMany({
       where: {
         profileId: { in: userIds },
       },
+      include: { profile: true },
+      orderBy: { createdAt: 'desc' },
     })
     return posts
   } catch (error) {

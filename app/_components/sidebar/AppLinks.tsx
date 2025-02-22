@@ -22,6 +22,10 @@ const appLinks: iAppLinks[] = [
     url: '/app/my-posts',
   },
   {
+    title: 'Liked',
+    url: '/app/liked',
+  },
+  {
     title: 'Users',
     url: '/app/users',
   },

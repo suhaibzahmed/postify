@@ -1,3 +1,4 @@
+import EmptyList from '@/app/_components/EmptyList'
 import SinglePost from '@/app/_components/post/SinglePost'
 import { getAllPosts } from '@/utils/actions'
 
@@ -7,7 +8,7 @@ async function AllPostsPage() {
   return (
     <div>
       {posts?.length === 0 ? (
-        <p>no posts found</p>
+        <EmptyList title="posts" />
       ) : (
         posts?.map((post, index) => (
           <SinglePost
