@@ -1,5 +1,5 @@
+import EmptyList from '@/app/_components/EmptyList'
 import CreatePostButton from '@/app/_components/post/CreatePostButton'
-import NoPostsFound from '@/app/_components/post/NoPostsFound'
 import SinglePost from '@/app/_components/post/SinglePost'
 import { getMyPosts } from '@/utils/actions'
 
@@ -9,7 +9,7 @@ async function MyPostsPage() {
   return (
     <div>
       {posts?.length === 0 ? (
-        <NoPostsFound />
+        <EmptyList title="posts" />
       ) : (
         posts?.map((post, index) => (
           <SinglePost

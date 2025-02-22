@@ -33,7 +33,7 @@ function SinglePost(props: iPost) {
               {profile?.firstName} {profile?.lastName}
             </p>
             <Separator orientation="vertical" className="h-5" />
-            <p>{profile?.username}</p>
+            <p>@{profile?.username}</p>
             <Separator orientation="vertical" className="h-5" />
             {/* TODO: Add image file */}
             <p>{formatDate(profile?.createdAt)}</p>

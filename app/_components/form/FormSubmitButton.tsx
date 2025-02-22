@@ -6,21 +6,30 @@ import Loader from '../Loader'
 interface iFormSubmitButton {
   text?: string
   pendingText?: string
+  variant?:
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost'
+    | 'link'
+    | null
+    | undefined
 }
 
 function FormSubmitButton(props: iFormSubmitButton) {
-  const { text, pendingText } = props
+  const { text, pendingText, variant } = props
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={pending} variant={variant || 'default'}>
       {pending ? (
         <>
           <Loader />
-          {text}
+          {pendingText}
         </>
       ) : (
-        pendingText
+        text
       )}
     </Button>
   )

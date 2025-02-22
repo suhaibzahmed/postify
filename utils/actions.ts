@@ -131,3 +131,74 @@ export async function getLikesCount(postId: string) {
   const count = await db.like.count({ where: { postId } })
   return count
 }
+
+export async function getAllUsers() {
+  try {
+    const user = await checkAuth()
+    const users = await db.profile.findMany({
+      where: { NOT: { clerkId: user.id } },
+    })
+    return users
+  } catch (error) {
+    stdErrorMsg('getting all users', error)
+  }
+}
+
+export async function checkCurrentUserFollowing(profileId: string) {
+  try {
+    const currentUser = await checkAuth()
+    const followedUser = await db.follow.findFirst({
+      where: { followerId: currentUser.id, followingId: profileId },
+    })
+    return followedUser
+  } catch (error) {
+    stdErrorMsg('checking current user follows', error)
+  }
+}
+
+export async function followUnfollowUser(
+  prevState: unknown,
+  profileId: string
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const user = await checkAuth()
+    const followedUser = await checkCurrentUserFollowing(profileId)
+
+    if (followedUser) {
+      await db.follow.delete({ where: { id: followedUser.id } })
+      revalidatePath('/app/users')
+      return { success: true, message: 'Unfollowed user successfully' }
+    } else {
+      await db.follow.create({
+        data: {
+          followerId: user.id,
+          followingId: profileId,
+        },
+      })
+      revalidatePath('/app/users')
+      return { success: true, message: 'followed user successfully' }
+    }
+  } catch (error) {
+    return { success: false, message: 'error while following user' }
+  }
+}
+
+export async function getFollowedUsersPost() {
+  try {
+    const user = await checkAuth()
+    const followedUsers = await db.follow.findMany({
+      where: {
+        followerId: user.id,
+      },
+    })
+    const userIds = followedUsers.map((user) => user.id)
+    const posts = await db.post.findMany({
+      where: {
+        profileId: { in: userIds },
+      },
+    })
+    return posts
+  } catch (error) {
+    stdErrorMsg('getting followed users posts', error)
+  }
+}
