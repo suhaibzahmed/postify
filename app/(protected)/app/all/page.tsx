@@ -9,7 +9,14 @@ async function AllPostsPage() {
       {posts?.length === 0 ? (
         <p>no posts found</p>
       ) : (
-        posts?.map((post, index) => <SinglePost key={post.id} index={index} />)
+        posts?.map((post, index) => (
+          <SinglePost
+            key={post.id}
+            post={post}
+            profile={post.profile}
+            isLast={index === posts.length - 1}
+          />
+        ))
       )}
     </div>
   )

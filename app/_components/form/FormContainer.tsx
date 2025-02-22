@@ -8,17 +8,15 @@ import { useToast } from '@/hooks/use-toast'
 function FormContainer({
   action,
   children,
-  btnTitle = 'submit',
-  btnLoadingTitle = 'submitting',
   setOpen,
 }: {
   action: iAction
   children: React.ReactNode
-  btnTitle: string
+  btnTitle?: string
   btnLoadingTitle?: string
-  setOpen: Dispatch<SetStateAction<boolean>>
+  setOpen?: Dispatch<SetStateAction<boolean>>
 }) {
-  const [state, formAction, isPending] = useActionState(action, null)
+  const [state, formAction] = useActionState(action, null)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -36,11 +34,6 @@ function FormContainer({
   return (
     <form action={formAction} className="flex flex-col gap-y-4">
       {children}
-      <FormSubmitButton
-        isPending={isPending}
-        btnTitle={btnTitle}
-        btnLoadingTitle={btnLoadingTitle}
-      />
     </form>
   )
 }

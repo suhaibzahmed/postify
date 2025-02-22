@@ -1,26 +1,29 @@
+'use client'
 import { Button } from '@/components/ui/button'
+import { useFormStatus } from 'react-dom'
 import Loader from '../Loader'
 
 interface iFormSubmitButton {
-  isPending: boolean
-  btnTitle: string
-  btnLoadingTitle?: string
+  text?: string
+  pendingText?: string
 }
 
 function FormSubmitButton(props: iFormSubmitButton) {
-  const { btnTitle, isPending, btnLoadingTitle } = props
+  const { text, pendingText } = props
+  const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={isPending}>
-      {isPending ? (
+    <Button type="submit" disabled={pending}>
+      {pending ? (
         <>
           <Loader />
-          {btnLoadingTitle}
+          {text}
         </>
       ) : (
-        btnTitle
+        pendingText
       )}
     </Button>
   )
 }
+
 export default FormSubmitButton

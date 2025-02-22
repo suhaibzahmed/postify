@@ -1,6 +1,8 @@
 // use types for unions Eg: type a = b | c
 // use interface for rest
 
+import { Post, Profile } from '@prisma/client'
+
 export interface iUser {
   clerkId: string
   firstName: string
@@ -15,4 +17,10 @@ export interface iAction {
     success: boolean
     message: string
   }>
+}
+
+export interface iPost {
+  profile: Profile | null
+  post: Post
+  isLast: boolean
 }
