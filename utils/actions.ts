@@ -3,10 +3,10 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import db from './db'
-import { postSchema, validateWithZodSchema } from './schemas'
+import { postSchema, userUpdateSchema, validateWithZodSchema } from './schemas'
 import { revalidatePath } from 'next/cache'
 
-async function checkAuth() {
+export async function checkAuth() {
   const user = await currentUser()
   if (!user) return redirect('/')
   return user
@@ -22,19 +22,6 @@ export async function getCurrentProfileImage() {
     return user.imageUrl
   } catch (error) {
     stdErrorMsg('getting user image', error)
-  }
-}
-
-export async function getCurrentUserInfo() {
-  try {
-    const user = await checkAuth()
-    return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-    }
-  } catch (error) {
-    stdErrorMsg('getting user info', error)
   }
 }
 
@@ -248,5 +235,55 @@ export async function getFollowerCount() {
     return count
   } catch (error) {
     stdErrorMsg('getting follower count', error)
+  }
+}
+
+export async function updateProfile(
+  prevState: unknown,
+  formData: FormData
+): Promise<{ success: boolean; message: string }> {
+  try {
+    const user = await checkAuth()
+    const userDetails = await db.profile.findUnique({
+      where: { clerkId: user.id },
+    })
+
+    const rawData = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      username: formData.get('username') as string,
+    }
+    const validatedData = validateWithZodSchema(userUpdateSchema, rawData)
+
+    await db.profile.update({
+      where: {
+        clerkId: user.id,
+      },
+      data: {
+        ...userDetails,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        username: validatedData.username,
+      },
+    })
+
+    revalidatePath('/app/profile')
+    return { success: true, message: 'user details updated successfully' }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'error occurred while updating user details',
+    }
+  }
+}
+
+export async function getProfileById(profileId: string) {
+  try {
+    const profile = await db.profile.findUnique({
+      where: { clerkId: profileId },
+    })
+    return profile
+  } catch (error) {
+    stdErrorMsg('getting profile by ID', error)
   }
 }

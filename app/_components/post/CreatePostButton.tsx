@@ -10,10 +10,10 @@ import {
 } from '@/components/ui/dialog'
 import { createPost } from '@/utils/actions'
 import { FiPlus } from 'react-icons/fi'
-import FormContainer from '../form/FormContainer'
 import FormInput from '../form/FormInput'
 import { useState } from 'react'
 import FormSubmitButton from '../form/FormSubmitButton'
+import FormContainerDialog from '../form/FormContainerDialog'
 
 function CreatePostButton() {
   const [open, setOpen] = useState(false)
@@ -28,7 +28,7 @@ function CreatePostButton() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Post</DialogTitle>
-          <FormContainer
+          <FormContainerDialog
             btnTitle="create post"
             btnLoadingTitle="creating post"
             action={createPost}
@@ -36,7 +36,7 @@ function CreatePostButton() {
           >
             <FormInput name="title" label="title" />
             <FormSubmitButton text="create post" pendingText="creating post" />
-          </FormContainer>
+          </FormContainerDialog>
         </DialogHeader>
       </DialogContent>
     </Dialog>

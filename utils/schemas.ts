@@ -24,6 +24,12 @@ function validateFile() {
   return image
 }
 
+export const userUpdateSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  username: z.string(),
+})
+
 export const validateWithZodSchema = (schema: ZodSchema, formData: unknown) => {
   const { success, data, error } = schema.safeParse(formData)
 

@@ -4,7 +4,7 @@ import { formatDate } from '@/utils/formatDate'
 import Image from 'next/image'
 import { FaRegHeart, FaUser } from 'react-icons/fa'
 import { CommentPostButton, LikePostButton } from '../form/FormSubmitButton'
-import FormContainer from '../form/FormContainer'
+import FormContainer from '../form/FormContainerDialog'
 import { likePost } from '@/utils/actions'
 import LikePost from './LikePost'
 import CommentPost from './CommentPost'
@@ -45,7 +45,7 @@ function SinglePost(props: iPost) {
 
           <div className="flex items-center gap-x-8">
             <LikePost postId={post.id} />
-            {/* TODO: Add comments button */}
+            {/* TODO: Add comments */}
             <CommentPost postId={post.id} />
           </div>
         </div>
