@@ -6,7 +6,7 @@ async function AllPostsPage() {
   const posts = await getAllPosts()
 
   return (
-    <div>
+    <div className="flex flex-col">
       {posts?.length === 0 ? (
         <EmptyList title="posts" />
       ) : (
