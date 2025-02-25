@@ -4,10 +4,10 @@ import { SignOutButton } from '@clerk/nextjs'
 
 function LogoutButton() {
   return (
-    <div>
-      <Separator />
+    <div className="w-full">
+      <Separator className="my-4" />
       <SignOutButton redirectUrl="/">
-        <Button>logout</Button>
+        <Button className="w-full">logout</Button>
       </SignOutButton>
     </div>
   )

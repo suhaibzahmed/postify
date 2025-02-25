@@ -1,11 +1,10 @@
 import FormContainer from '@/app/_components/form/FormContainer'
 import FormInput from '@/app/_components/form/FormInput'
 import FormSubmitButton from '@/app/_components/form/FormSubmitButton'
-import { checkAuth, getProfileById, updateProfile } from '@/utils/actions'
+import { getCurrentProfile, updateProfile } from '@/utils/actions'
 
 async function ProfilePage() {
-  const user = await checkAuth()
-  const userDetails = await getProfileById(user.id)
+  const userDetails = await getCurrentProfile()
 
   return (
     <div>

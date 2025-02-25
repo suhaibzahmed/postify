@@ -277,10 +277,11 @@ export async function updateProfile(
   }
 }
 
-export async function getProfileById(profileId: string) {
+export async function getCurrentProfile() {
   try {
+    const user = await checkAuth()
     const profile = await db.profile.findUnique({
-      where: { clerkId: profileId },
+      where: { clerkId: user.id },
     })
     return profile
   } catch (error) {

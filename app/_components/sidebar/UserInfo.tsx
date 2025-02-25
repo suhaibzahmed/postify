@@ -1,13 +1,12 @@
-import { checkAuth, getProfileById } from '@/utils/actions'
+import { getCurrentProfile } from '@/utils/actions'
 
 async function UserInfo() {
-  const user = await checkAuth()
-  const userDetails = await getProfileById(user.id)
+  const userDetails = await getCurrentProfile()
 
   return (
-    <div>
-      <h2>{userDetails?.firstName}</h2>
-      <p>@{userDetails?.username}</p>
+    <div className="text-center">
+      <h2 className="font-medium">{userDetails?.firstName}</h2>
+      <p className="text-gray-500">@{userDetails?.username}</p>
     </div>
   )
 }

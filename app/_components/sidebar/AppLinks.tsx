@@ -1,7 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 interface iAppLinks {
   title: string
@@ -36,10 +38,16 @@ const appLinks: iAppLinks[] = [
 ]
 
 function AppLinks() {
+  const pathname = usePathname()
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1 w-full ">
+      <Separator className="my-4" />
       {appLinks.map((link) => (
-        <Button asChild key={link.url}>
+        <Button
+          asChild
+          key={link.url}
+          variant={pathname === link.url ? 'default' : 'ghost'}
+        >
           <Link href={link.url}>{link.title}</Link>
         </Button>
       ))}
